@@ -1,0 +1,30 @@
+
+TODO 
+
+user/sign-in        POST
+user/signup         POST
+user                GET
+user                DELETE
+
+company/:id      GET
+company          POST   //create     type -> Contractor/Sub-contractor
+company          PUT    //edit
+
+tender          POST
+tender          GET
+tender/:id      GET
+tender/:id      DELETE
+
+entry/:tender-id                    POST
+entry/:tender-id                    GET
+entry/:tender-id/:entry-id          GET
+
+
+analytics/:tender-id        POST
+analytics/:tender-id        GET
+
+reviews/:company-id         POST    // to, from, review
+reviews/:company-id         GET
+reviews/:company-id         DELETE
+
+
