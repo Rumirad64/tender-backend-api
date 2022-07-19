@@ -8,10 +8,14 @@ const { Auth } = require('../middleware/auth.middleware.js');
 const user_controller = require('../controllers/user.controller.js');
 
 
-router.post('/auth/validate-token', Auth, user_controller.validateToken);             //to validate jwt token anytime we need to validate
+router.post('/auth/validate-token', Auth, user_controller.validateToken); 
+
 router.get('/hello', (req, res) => {
     res.json('Hello World! from hello route');
-});                                              //to test if server is running
+});                  
+
+router.post('/user/register', user_controller.Register);
+router.post('/user/sign-in', user_controller.SignIn);
 
 
 module.exports = router;
