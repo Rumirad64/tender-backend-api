@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const { exit } = require('process');
 var mysql = require('mysql');
 
 var connection = mysql.createConnection({
@@ -27,7 +28,16 @@ connection.connect(function(err) {
     });
 });
 
-
+setInterval(function () {
+    //console.log('Checking database connection...');
+    connection.query('SELECT 1', function (err, rows, fields) {
+        if (err) {
+            console.error('Error performing query: ' + err.message);
+            exit(1);
+        }
+        //console.log('Database connection ping successful.');
+    });
+}, 5000);
 
 
 module.exports = connection;
