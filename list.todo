@@ -13,10 +13,10 @@ company          POST   //create     type -> Contractor/Sub-contractor     ok
 company          PUT    //edit          todo
 company/assign   POST   //assign       ok
 
-tender          POST
-tender          GET
-tender/:id      GET
-tender/:id      DELETE
+tender          POST        ok
+tender          GET         ok
+tender/:id      GET         ok
+tender/:id      DELETE      ok
 
 entry/:tender-id                    POST
 entry/:tender-id                    GET
