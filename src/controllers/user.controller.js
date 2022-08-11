@@ -33,6 +33,7 @@ exports.SignIn = async (req, res) => {
       id: result.id,
       email: result.email,
       fullname: result.fullname,
+      companyid: result.companyid,
     });
     res.json({
       message: 'User signed in successfully',
@@ -97,6 +98,23 @@ exports.Delete = async (req, res) => {
   } catch (err) {
     res.json({
       message: 'Error deleting user',
+      data: null,
+      error: err,
+    });
+  }
+}
+
+exports.IsEmailAvailable = async (req, res) => {
+  try {
+    const result = await userService.IsEmailAvailable(req.body.email);
+    res.json({
+      message: 'Email is available',
+      data: result,
+      error: null,
+    });
+  } catch (err) {
+    res.json({
+      message: 'Error checking email availability',
       data: null,
       error: err,
     });
