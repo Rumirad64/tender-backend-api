@@ -1,7 +1,7 @@
-const { v4 } = require('uuid');
-const SQL = require('../database/database');
+const { v4 : uuidv4 } = require('uuid');const SQL = require('../database/database');
 const crypto = require('crypto');
-const uuidv4 = v4;
+
+const company_service = require('./company.service');
 
 exports.Register = async (email, password, fullname) => {
   if (!email || !password || !fullname) {
@@ -45,10 +45,12 @@ exports.SignIn = async (email, password) => {
           const hash = result[0].password;
           const isValid = crypto.createHash('sha256').update(password).digest('hex') === hash;
           if (isValid) {
+            const companyid = await company_service.GetCompanyByUserID(result[0].id) || null;
             resolve({
               id: result[0].id,
               email: result[0].email,
               fullname: result[0].fullname,
+              companyid : companyid,
             });
           } else {
             reject('Invalid password');
@@ -121,6 +123,27 @@ exports.DeleteUser = async (idFromMiddleware, id) => {
     }
   })
 };
+
+exports.IsEmailAvailable = async (email) => {
+  if (!email) {
+    throw {
+      message: 'Missing required fields'
+    };
+  }
+  return new Promise(async (resolve, reject) => {
+    try {
+      const sql = `SELECT * FROM Users WHERE email = ?`;
+      SQL.query(sql, [email], (err, result, fields) => {
+        if (err) reject(err.sqlMessage);
+        else if (result.length === 0) resolve(true);
+        else resolve(false);
+      });
+    } catch (err) {
+      console.log(err);
+      reject(err);
+    }
+  })
+}
 
 
 /* setTimeout(() => {

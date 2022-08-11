@@ -1,14 +1,17 @@
 
 TODO 
 
-user/sign-in        POST
-user/signup         POST
-user                GET
-user                DELETE
+user/sign-in        POST    ok
+user/signup         POST    ok
+user                GET     ok
+user                DELETE  ok
+/user/is-email-available        POST     ok
+user                PUT     todo
 
-company/:id      GET
-company          POST   //create     type -> Contractor/Sub-contractor
-company          PUT    //edit
+company/:id      GET    ok
+company          POST   //create     type -> Contractor/Sub-contractor     ok
+company          PUT    //edit          todo
+company/assign   POST   //assign       ok
 
 tender          POST
 tender          GET
