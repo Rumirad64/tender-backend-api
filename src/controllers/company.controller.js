@@ -4,7 +4,9 @@ const companyService = require('../services/company.service.js');
 
 exports.CreateCompany = async (req, res) => {
   try {
+    const userid = req.user.id;
     const result = await companyService.CreateCompany(req.body.name, req.body.ownername, req.body.address, req.body.city, req.body.url, req.body.tel, req.body.type, req.body.category);
+    const ret = await companyService.AssignCompanyToUser(userid, result.id);
     res.json({
       message: 'Company created successfully',
       data: result,

@@ -26,7 +26,7 @@ router.post('/user/is-email-available', user_controller.IsEmailAvailable);
 
 router.post('/company', Auth, company_controller.CreateCompany);
 router.get('/company', Auth, company_controller.All);
-router.post('/company/assign', Auth, company_controller.AssignCompanyToUser);
+/* router.post('/company/assign', Auth, company_controller.AssignCompanyToUser); */
 router.get('/company/:id', Auth, company_controller.GetCompanyByID);
 
 router.get('/tender', Auth, tender_controller.GetAllTenders);
