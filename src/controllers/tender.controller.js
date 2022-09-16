@@ -7,7 +7,7 @@ exports.CreateTender = async (req, res) => {
         const companyid = req.user.companyid;
         const ex = new Date().toISOString().slice(0, 19).replace('T', ' ');
         console.log(ex);
-        req.body.expirydate = ex;
+        //req.body.expirydate = ex;
 
         const result = await tenderService.CreateTender(req.body.title, req.body.description, req.body.category, req.body.location, req.body.expirydate, companyid, req.body.image, req.body.document);
         res.json({
@@ -44,7 +44,8 @@ exports.GetTenderByID = async (req, res) => {
 exports.GetAllTenders = async (req, res) => {
     try {
         const search = req.query.search || '';
-        const result = await tenderService.GetAllTenders(search);
+        const category = req.query.category || '';
+        const result = await tenderService.GetAllTenders(search, category);
         res.json({
             message: 'Tenders found',
             data: result,

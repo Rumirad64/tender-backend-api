@@ -46,10 +46,10 @@ exports.CreateTender = async (title, description, category, location, expirydate
     });
 }
 
-exports.GetAllTenders = async (search) => {
+exports.GetAllTenders = async (search, category) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const sql = `SELECT * FROM Tender WHERE title LIKE '%${search}%' ORDER BY updated_at DESC `;
+            const sql = `SELECT * FROM Tender WHERE (title LIKE '%${search}%' OR description LIKE '%${search}%') AND category LIKE '%${category}%' ORDER BY updated_at DESC`;
             console.log(sql);
             SQL.query(sql, (err, result, fields) => {
                 if (err) reject(err.sqlMessage);
