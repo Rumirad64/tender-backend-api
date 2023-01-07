@@ -25,15 +25,25 @@ router.delete('/user/:id', Auth, user_controller.Delete);
 router.post('/user/is-email-available', user_controller.IsEmailAvailable);
 
 router.post('/company', Auth, company_controller.CreateCompany);
-router.get('/company', Auth, company_controller.All);
+router.get('/company', company_controller.All);
 /* router.post('/company/assign', Auth, company_controller.AssignCompanyToUser); */
-router.get('/company/:id', Auth, company_controller.GetCompanyByID);
+router.get('/company/:id', company_controller.GetCompanyByID);
 
-router.get('/tender', Auth, tender_controller.GetAllTenders);
+router.get('/tender', tender_controller.GetAllTenders);
 router.get('/tender/my', Auth, tender_controller.GetMyTenders);  //related to my company
 router.post('/tender', Auth, tender_controller.CreateTender);
-router.get('/tender/:id', Auth, tender_controller.GetTenderByID);
+router.get('/tender/:id', tender_controller.GetTenderByID);
 router.delete('/tender/:id', Auth, tender_controller.DeleteTender);
+
+router.post('/tender/:id/bid', Auth, tender_controller.BidOnTender);
+router.get('/tender/:id/bid', Auth, tender_controller.GetBidsOnTender);
+// bid count
+router.get('/tender/:id/bid/count', Auth, tender_controller.GetBidCountOnTender);
+
+
+// tenders that I have bid on
+router.get('/tender/bid/my', Auth, tender_controller.GetMyBids);
+
 
 router.post('/file-upload', Auth, filehandling_controller.UploadFile);
     

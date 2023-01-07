@@ -124,3 +124,89 @@ exports.DeleteTender = async (companyid, tenderid) => {
         }
     });
 }
+
+exports.BidOnTender = async (tenderid, companyid, amount) => {
+    if (!tenderid || !companyid || !amount) {
+        throw {
+            message: 'Missing required fields'
+        };
+    }
+    return new Promise(async (resolve, reject) => {
+        try {
+            const sql = `INSERT INTO Bid (id, tenderid, companyid, amount) VALUES (?, ?, ?, ?)`;
+            const id = uuidv4();
+            SQL.query(sql, [id, tenderid, companyid, amount], (err, result, fields) => {
+                if (err) {
+                    if (err.sqlMessage.includes('Duplicate')) {
+                        reject('Bid already exists');
+                    }
+                    console.log(err);
+                    reject(err.sqlMessage);
+                }
+                else resolve({
+                    id,
+                    tenderid,
+                    companyid,
+                    amount
+                });
+            });
+        }
+        catch (err) {
+            console.log(err);
+            reject(err);
+        }
+    });
+}
+
+exports.GetBidsOnTender = async (tenderid) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const sql = `   SELECT * 
+                            FROM Bid, Company,Tender 
+                            WHERE   Bid.tenderid = Tender.id 
+                                    AND Bid.companyid = Company.id 
+                                    AND Bid.id = ?`;
+            SQL.query(sql, [tenderid], (err, result, fields) => {
+                if (err) reject(err.sqlMessage);
+                else resolve(result);
+            }
+            );
+        }
+        catch (err) {
+            console.log(err);
+            reject(err);
+        }
+    });
+}
+
+exports.GetBidCountOnTender = async (tenderid) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const sql = `SELECT COUNT(*) AS count FROM Bid WHERE tenderid = ?`;
+            SQL.query(sql, [tenderid], (err, result, fields) => {
+                if (err) reject(err.sqlMessage);
+                else resolve(result);
+            });
+        }
+        catch (err) {
+            console.log(err);
+            reject(err);
+        }
+    });
+}
+
+exports.GetMyBids = async (companyid) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const sql = `SELECT * FROM Bid, Tender WHERE Bid.tenderid = Tender.id AND Bid.companyid = ? ORDER BY updated_at DESC`;
+            SQL.query(sql, [companyid], (err, result, fields) => {
+                if (err) reject(err.sqlMessage);
+                else resolve(result);
+            });
+        }
+        catch (err) {
+            console.log(err);
+            reject(err);
+        }
+    });
+}
