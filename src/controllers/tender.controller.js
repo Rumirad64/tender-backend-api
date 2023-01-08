@@ -119,8 +119,9 @@ exports.BidOnTender = async (req, res) => {
 
 exports.GetBidsOnTender = async (req, res) => {
   const tenderid = req.params.id;
+  const companyid = req.user.companyid;
   try {
-    const result = await tenderService.GetBidsOnTender(tenderid);
+    const result = await tenderService.GetBidsOnTender(tenderid, companyid);
     res.json({
       message: 'Bids found',
       data: result,
@@ -139,6 +140,25 @@ exports.GetBidCountOnTender = async (req, res) => {
   const tenderid = req.params.id;
   try {
     const result = await tenderService.GetBidCountOnTender(tenderid);
+    res.json({
+      message: 'Bids found',
+      data: result,
+      error: null,
+    });
+  } catch (err) {
+    res.json({
+      message: 'Error finding bids',
+      data: null,
+      error: err,
+    });
+  }
+}
+
+exports.IsAllowedToBidOnTender = async (req, res) => {
+  const tenderid = req.params.id;
+  const companyid = req.user.companyid;
+  try {
+    const result = await tenderService.IsAllowedToBidOnTender(tenderid, companyid);
     res.json({
       message: 'Bids found',
       data: result,

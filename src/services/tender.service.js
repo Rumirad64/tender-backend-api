@@ -95,7 +95,8 @@ exports.GetTenderByID = async (id) => {
 exports.GetMyTenders = async (companyid) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const sql = `SELECT * FROM Tender WHERE companyid = ?`;
+            // get my tenders and bid count for each tender
+            const sql = `SELECT Tender.*, COUNT(Bids.id) AS bidcount FROM Tender LEFT JOIN Bids ON Tender.id = Bids.tenderid WHERE Tender.companyid = ? GROUP BY Tender.id ORDER BY updated_at DESC`;
             SQL.query(sql, [companyid], (err, result, fields) => {
                 if (err) reject(err.sqlMessage);
                 else resolve(result);
@@ -133,7 +134,7 @@ exports.BidOnTender = async (tenderid, companyid, amount) => {
     }
     return new Promise(async (resolve, reject) => {
         try {
-            const sql = `INSERT INTO Bid (id, tenderid, companyid, amount) VALUES (?, ?, ?, ?)`;
+            const sql = `INSERT INTO Bids (id, tenderid, companyid, amount) VALUES (?, ?, ?, ?)`;
             const id = uuidv4();
             SQL.query(sql, [id, tenderid, companyid, amount], (err, result, fields) => {
                 if (err) {
@@ -158,15 +159,16 @@ exports.BidOnTender = async (tenderid, companyid, amount) => {
     });
 }
 
-exports.GetBidsOnTender = async (tenderid) => {
+exports.GetBidsOnTender = async (tenderid, companyid) => {
     return new Promise(async (resolve, reject) => {
         try {
             const sql = `   SELECT * 
-                            FROM Bid, Company,Tender 
-                            WHERE   Bid.tenderid = Tender.id 
-                                    AND Bid.companyid = Company.id 
-                                    AND Bid.id = ?`;
-            SQL.query(sql, [tenderid], (err, result, fields) => {
+                            FROM Bids, Company,Tender 
+                            WHERE   Bids.tenderid = Tender.id 
+                                    AND Bids.companyid = Company.id
+                                    AND Bids.tenderid = ?
+                                    AND Bids.companyid = ?`;
+            SQL.query(sql, [tenderid , companyid], (err, result, fields) => {
                 if (err) reject(err.sqlMessage);
                 else resolve(result);
             }
@@ -182,7 +184,7 @@ exports.GetBidsOnTender = async (tenderid) => {
 exports.GetBidCountOnTender = async (tenderid) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const sql = `SELECT COUNT(*) AS count FROM Bid WHERE tenderid = ?`;
+            const sql = `SELECT COUNT(*) AS count FROM Bids WHERE tenderid = ?`;
             SQL.query(sql, [tenderid], (err, result, fields) => {
                 if (err) reject(err.sqlMessage);
                 else resolve(result);
@@ -198,7 +200,7 @@ exports.GetBidCountOnTender = async (tenderid) => {
 exports.GetMyBids = async (companyid) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const sql = `SELECT * FROM Bid, Tender WHERE Bid.tenderid = Tender.id AND Bid.companyid = ? ORDER BY updated_at DESC`;
+            const sql = `SELECT * FROM Bids, Tender WHERE Bids.tenderid = Tender.id AND Bids.companyid = ? ORDER BY Bids.updated_at DESC`;
             SQL.query(sql, [companyid], (err, result, fields) => {
                 if (err) reject(err.sqlMessage);
                 else resolve(result);
@@ -210,3 +212,18 @@ exports.GetMyBids = async (companyid) => {
         }
     });
 }
+
+exports.IsAllowedToBidOnTender = async (tenderid, companyid) => {
+    //check if company has already bid on tender. only one bid per company per tender
+    return new Promise(async (resolve, reject) => {
+        const sql = `SELECT * FROM Bids WHERE tenderid = ? AND companyid = ?`;
+        SQL.query(sql, [tenderid, companyid], (err, result, fields) => {
+            if (err) reject(err.sqlMessage);
+            else resolve(result.length === 0);
+        }
+        );
+    });
+}
+
+
+

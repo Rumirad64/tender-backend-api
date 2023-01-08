@@ -40,6 +40,9 @@ router.get('/tender/:id/bid', Auth, tender_controller.GetBidsOnTender);
 // bid count
 router.get('/tender/:id/bid/count', Auth, tender_controller.GetBidCountOnTender);
 
+// is allowed to bid
+router.get('/tender/:id/bid/allowed', Auth, tender_controller.IsAllowedToBidOnTender);
+
 
 // tenders that I have bid on
 router.get('/tender/bid/my', Auth, tender_controller.GetMyBids);
