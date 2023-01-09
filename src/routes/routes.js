@@ -28,6 +28,7 @@ router.post('/company', Auth, company_controller.CreateCompany);
 router.get('/company', company_controller.All);
 /* router.post('/company/assign', Auth, company_controller.AssignCompanyToUser); */
 router.get('/company/:id', company_controller.GetCompanyByID);
+router.patch('/company/:id', Auth, company_controller.UpdateCompany);
 
 router.get('/tender', tender_controller.GetAllTenders);
 router.get('/tender/my', Auth, tender_controller.GetMyTenders);  //related to my company

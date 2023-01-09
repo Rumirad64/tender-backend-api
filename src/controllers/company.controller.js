@@ -22,6 +22,26 @@ exports.CreateCompany = async (req, res) => {
   }
 };
 
+exports.UpdateCompany = async (req, res) => {
+  try {
+    const { name, ownername, address, city, url, tel, type, category } = req.body;
+    const { companyid } = req.user;
+    const result = await companyService.UpdateCompany(companyid, name, ownername, address, city, url, tel, type, category);
+    res.json({
+      message: 'Company updated successfully',
+      data: result,
+      error: null,
+    });
+  } catch (err) {
+    res.json({
+      message: err.message,
+      data: null,
+      error: err,
+    });
+  }
+};
+
+
 exports.AssignCompanyToUser = async (req, res) => {
   try {
     console.log("req.body) ", req.body);

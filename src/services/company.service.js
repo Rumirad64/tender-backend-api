@@ -123,3 +123,37 @@ exports.GetCompanyByID = async (id) => {
     })
 }
 
+
+exports.UpdateCompany = async (id, name, ownername, address, city, url, tel, type, category) => {
+    if (!id || !name || !ownername || !address || !city || !url || !tel || !type || !category) {
+        throw {
+            message: 'Missing required fields'
+        };
+    }
+    return new Promise(async (resolve, reject) => {
+        try {
+            const sql = `UPDATE Company SET name = ?, ownername = ?, address = ?, city = ?, url = ?, tel = ?, type = ?, category = ? WHERE id = ?`;
+            SQL.query(sql, [name, ownername, address, city, url, tel, type, category, id], (err, result, fields) => {
+                // print sql query with values
+                console.log(sql, [name, ownername, address, city, url, tel, type, category, id]);
+
+                if (err) reject(err.sqlMessage);
+                else resolve({
+                    id,
+                    name,
+                    ownername,
+                    address,
+                    city,
+                    url,
+                    tel,
+                    type,
+                    category,
+                });
+            });
+        }
+        catch (err) {
+            console.log(err);
+            reject(err);
+        }
+    });
+}
